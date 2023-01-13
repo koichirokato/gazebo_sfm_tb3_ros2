@@ -1,0 +1,45 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+    <model name="wall">
+    <static>true</static>
+    <link name="walllink">
+    
+    <collision name="collision">
+        <pose>12 0 0 0 0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <uri>model://turtlebot3_jp_world/meshes/wall.stl</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <bounce/>
+          <friction>
+            <ode/>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+        </surface>
+      </collision>
+
+      <visual name="visual">
+        <pose>12 0 0 0 0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <uri>model://turtlebot3_jp_world/meshes/wall.stl</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/FlatBlack</name>
+          </script>
+        </material>
+      </visual>
+
+    </link>
+    </model>
+</sdf>

@@ -1,0 +1,517 @@
+<?xml version="1.0"?>
+<sdf version='1.4'>
+  <world name='default'>
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- A ground plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <physics type="ode">
+      <real_time_update_rate>1000.0</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>150</iters>
+          <precon_iters>0</precon_iters>
+          <sor>1.400000</sor>
+          <use_dynamic_moi_rescaling>1</use_dynamic_moi_rescaling>
+        </solver>
+        <constraints>
+          <cfm>0.00001</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>2000.000000</contact_max_correcting_vel>
+          <contact_surface_layer>0.01000</contact_surface_layer>
+        </constraints>
+      </ode>
+    </physics>
+
+    <!-- Load model -->
+    <include>
+      <uri>model://turtlebot3_jp_world</uri>
+    </include>
+
+    <include>
+      <pose>10 0 0.01 0.0 0.0 0.0</pose>
+      <uri>model://turtlebot3_burger</uri>
+    </include>
+
+    <model name="actor1_collision_model">
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <!-- <visual name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </visual> -->
+      </link>
+    </model>
+
+    <actor name="actor1">
+      <pose>-1 2 -10 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+
+      <plugin name="actor1_plugin" filename="libPedestrianSFMRandomPlugin.so">
+        <velocity>0.9</velocity>
+        <radius>0.4</radius>
+        <animation_factor>5.1</animation_factor>
+        <people_distance>6.0</people_distance>
+        <!-- weights -->
+        <goal_weight>2.0</goal_weight>
+        <obstacle_weight>10.0</obstacle_weight> <!--10.0-->
+        <social_weight>15</social_weight> <!--2.1-->
+        <group_gaze_weight>3.0</group_gaze_weight>
+        <group_coh_weight>2.0</group_coh_weight>
+        <group_rep_weight>1.0</group_rep_weight>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>actor1_collision_model</model>
+        </ignore_obstacles>
+        <!-- <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>3 -5 -1</waypoint>
+          <waypoint>3 5 -1</waypoint>
+        </trajectory> -->
+        <random_trajectory>
+          <steps>10</steps>
+          <seed>6723872</seed>
+          <origin>10.0 0.0 0.0</origin>
+          <rx>11.0</rx><ry>6.0</ry>
+        </random_trajectory>
+      </plugin>
+
+      <plugin name="attach_model1" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor1_pose</link_name>
+          <model>
+            <model_name>actor1_collision_model</model_name>
+          </model>
+        </link>
+      </plugin>
+    </actor>
+
+    <model name="actor2_collision_model">
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <!-- <visual name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </visual> -->
+      </link>
+    </model>
+  
+    <actor name="actor2">
+      <pose>-1 2 -10 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+  
+      <plugin name="actor2_plugin" filename="libPedestrianSFMRandomPlugin.so">
+        <velocity>0.9</velocity>
+        <radius>0.4</radius>
+        <animation_factor>5.1</animation_factor>
+        <people_distance>6.0</people_distance>
+        <!-- weights -->
+        <goal_weight>2.0</goal_weight>
+        <obstacle_weight>10.0</obstacle_weight> <!--10.0-->
+        <social_weight>15</social_weight> <!--2.1-->
+        <group_gaze_weight>3.0</group_gaze_weight>
+        <group_coh_weight>2.0</group_coh_weight>
+        <group_rep_weight>1.0</group_rep_weight>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>actor2_collision_model</model>
+        </ignore_obstacles>
+        <!-- <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>3 -5 -1</waypoint>
+          <waypoint>3 5 -1</waypoint>
+        </trajectory> -->
+        <random_trajectory>
+          <steps>10</steps>
+          <seed>6723872</seed>
+          <origin>10.0 0.0 0.0</origin>
+          <rx>11.0</rx><ry>6.0</ry>
+        </random_trajectory>
+      </plugin>
+  
+      <plugin name="attach_model2" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor2_pose</link_name>
+          <model>
+            <model_name>actor2_collision_model</model_name>
+          </model>
+        </link>
+      </plugin>
+    </actor>
+
+    <model name="actor3_collision_model">
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <!-- <visual name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </visual> -->
+      </link>
+    </model>
+  
+    <actor name="actor3">
+      <pose>-1 2 -10 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+  
+      <plugin name="actor3_plugin" filename="libPedestrianSFMRandomPlugin.so">
+        <velocity>0.9</velocity>
+        <radius>0.4</radius>
+        <animation_factor>5.1</animation_factor>
+        <people_distance>6.0</people_distance>
+        <!-- weights -->
+        <goal_weight>2.0</goal_weight>
+        <obstacle_weight>10.0</obstacle_weight> <!--10.0-->
+        <social_weight>15</social_weight> <!--2.1-->
+        <group_gaze_weight>3.0</group_gaze_weight>
+        <group_coh_weight>2.0</group_coh_weight>
+        <group_rep_weight>1.0</group_rep_weight>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>actor3_collision_model</model>
+        </ignore_obstacles>
+        <!-- <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>3 -5 -1</waypoint>
+          <waypoint>3 5 -1</waypoint>
+        </trajectory> -->
+        <random_trajectory>
+          <steps>10</steps>
+          <seed>6723872</seed>
+          <origin>10.0 0.0 0.0</origin>
+          <rx>11.0</rx><ry>6.0</ry>
+        </random_trajectory>
+      </plugin>
+  
+      <plugin name="attach_model3" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor3_pose</link_name>
+          <model>
+            <model_name>actor3_collision_model</model_name>
+          </model>
+        </link>
+      </plugin>
+    </actor>
+
+    <model name="actor4_collision_model">
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <!-- <visual name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </visual> -->
+      </link>
+    </model>
+  
+    <actor name="actor4">
+      <pose>-1 2 -10 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+  
+  
+      <plugin name="actor4_plugin" filename="libPedestrianSFMRandomPlugin.so">
+        <velocity>0.9</velocity>
+        <radius>0.4</radius>
+        <animation_factor>5.1</animation_factor>
+        <people_distance>6.0</people_distance>
+        <!-- weights -->
+        <goal_weight>2.0</goal_weight>
+        <obstacle_weight>10.0</obstacle_weight> <!--10.0-->
+        <social_weight>15</social_weight> <!--2.1-->
+        <group_gaze_weight>3.0</group_gaze_weight>
+        <group_coh_weight>2.0</group_coh_weight>
+        <group_rep_weight>1.0</group_rep_weight>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>actor4_collision_model</model>
+        </ignore_obstacles>
+        <!-- <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>3 -5 -1</waypoint>
+          <waypoint>3 5 -1</waypoint>
+        </trajectory> -->
+        <random_trajectory>
+          <steps>10</steps>
+          <seed>6723872</seed>
+          <origin>10.0 0.0 0.0</origin>
+          <rx>11.0</rx><ry>6.0</ry>
+        </random_trajectory>
+      </plugin>
+  
+      <plugin name="attach_model4" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor4_pose</link_name>
+          <model>
+            <model_name>actor4_collision_model</model_name>
+          </model>
+        </link>
+      </plugin>
+    </actor>
+
+    <model name="actor5_collision_model">
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <!-- <visual name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </visual> -->
+      </link>
+    </model>
+  
+    <actor name="actor5">
+      <pose>-1 2 -10 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+  
+  
+      <plugin name="actor5_plugin" filename="libPedestrianSFMRandomPlugin.so">
+        <velocity>0.9</velocity>
+        <radius>0.4</radius>
+        <animation_factor>5.1</animation_factor>
+        <people_distance>6.0</people_distance>
+        <!-- weights -->
+        <goal_weight>2.0</goal_weight>
+        <obstacle_weight>10.0</obstacle_weight> <!--10.0-->
+        <social_weight>15</social_weight> <!--2.1-->
+        <group_gaze_weight>3.0</group_gaze_weight>
+        <group_coh_weight>2.0</group_coh_weight>
+        <group_rep_weight>1.0</group_rep_weight>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>actor5_collision_model</model>
+        </ignore_obstacles>
+        <!-- <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>3 -5 -1</waypoint>
+          <waypoint>3 5 -1</waypoint>
+        </trajectory> -->
+        <random_trajectory>
+          <steps>10</steps>
+          <seed>6723872</seed>
+          <origin>10.0 0.0 0.0</origin>
+          <rx>11.0</rx><ry>6.0</ry>
+        </random_trajectory>
+      </plugin>
+  
+      <plugin name="attach_model5" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor5_pose</link_name>
+          <model>
+            <model_name>actor5_collision_model</model_name>
+          </model>
+        </link>
+      </plugin>
+    </actor>
+
+    <model name="actor6_collision_model">
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <!-- <visual name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </visual> -->
+      </link>
+    </model>
+  
+    <actor name="actor6">
+      <pose>-1 2 -10 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+  
+  
+      <plugin name="actor6_plugin" filename="libPedestrianSFMRandomPlugin.so">
+        <velocity>0.9</velocity>
+        <radius>0.4</radius>
+        <animation_factor>5.1</animation_factor>
+        <people_distance>6.0</people_distance>
+        <!-- weights -->
+        <goal_weight>2.0</goal_weight>
+        <obstacle_weight>10.0</obstacle_weight> <!--10.0-->
+        <social_weight>15</social_weight> <!--2.1-->
+        <group_gaze_weight>3.0</group_gaze_weight>
+        <group_coh_weight>2.0</group_coh_weight>
+        <group_rep_weight>1.0</group_rep_weight>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>actor6_collision_model</model>
+        </ignore_obstacles>
+        <!-- <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>3 -5 -1</waypoint>
+          <waypoint>3 5 -1</waypoint>
+        </trajectory> -->
+        <random_trajectory>
+          <steps>10</steps>
+          <seed>6723872</seed>
+          <origin>10.0 0.0 0.0</origin>
+          <rx>11.0</rx><ry>6.0</ry>
+        </random_trajectory>
+      </plugin>
+  
+      <plugin name="attach_model6" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor6_pose</link_name>
+          <model>
+            <model_name>actor6_collision_model</model_name>
+          </model>
+        </link>
+      </plugin>
+    </actor>
+
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>false</shadows>
+    </scene>
+
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>0.0 0.0 17.0 0 1.5708 0</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+  </world>
+</sdf>
