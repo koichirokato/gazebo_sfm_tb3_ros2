@@ -37,6 +37,9 @@ install(DIRECTORY launch/
 install(DIRECTORY worlds/
    DESTINATION share/${PROJECT_NAME}/worlds
 )
+install(DIRECTORY models/
+   DESTINATION share/${PROJECT_NAME}/models
+)
 
 add_library(PedestrianSFMRandomPlugin SHARED src/PedestrianSFMRandomPlugin.cpp)
 target_include_directories(PedestrianSFMRandomPlugin PUBLIC include)
