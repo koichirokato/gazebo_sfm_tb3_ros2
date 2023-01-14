@@ -1,7 +1,10 @@
 # gazebo_sfm_tb3_ros2
+
+[![ros2_foxy](https://github.com/koichirokato/gazebo_sfm_tb3_ros2/actions/workflows/ros2_build.yml/badge.svg)](https://github.com/koichirokato/gazebo_sfm_tb3_ros2/actions/workflows/ros2_build.yml) [![ros2_galactic](https://github.com/koichirokato/gazebo_sfm_tb3_ros2/actions/workflows/ros2_galactic.yml/badge.svg)](https://github.com/koichirokato/gazebo_sfm_tb3_ros2/actions/workflows/ros2_galactic.yml)
+
 ## About
 
-SFM (Social Force Model) and turtlebot3 on gazebo using ros2  
+SFM (Social Force Model) and turtlebot3 on gazebo using ros2
 
 ## Demo
 
@@ -10,6 +13,7 @@ https://user-images.githubusercontent.com/46204057/212112813-9d413414-d63f-4006-
 ## Environment
 - Ubuntu 20.04
 - ROS Foxy
+- ROS Galactic (from GitHub Actions)
 
 ## Dependencies
  - [lightsfm](https://github.com/robotics-upo/lightsfm)
