@@ -36,93 +36,93 @@
 
 namespace gazebo
 {
-class GZ_PLUGIN_VISIBLE PedestrianSFMRandomPlugin : public ModelPlugin
-{
+  class GZ_PLUGIN_VISIBLE PedestrianSFMRandomPlugin : public ModelPlugin
+  {
   /// \brief Constructor
-public:
-  PedestrianSFMRandomPlugin();
+  public:
+    PedestrianSFMRandomPlugin();
 
-  /// \brief Load the actor plugin.
-  /// \param[in] _model Pointer to the parent model.
-  /// \param[in] _sdf Pointer to the plugin's SDF elements.
-public:
-  virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
+    /// \brief Load the actor plugin.
+    /// \param[in] _model Pointer to the parent model.
+    /// \param[in] _sdf Pointer to the plugin's SDF elements.
+  public:
+    virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
 
-  // Documentation Inherited.
-public:
-  virtual void Reset();
+    // Documentation Inherited.
+  public:
+    virtual void Reset();
 
-  /// \brief Function that is called every update cycle.
-  /// \param[in] _info Timing information
-private:
-  void OnUpdate(const common::UpdateInfo &_info);
-
-
-  // private: void InitializePedestrians();
-
-  /// \brief Helper function to detect the closest obstacles.
-private:
-  void HandleObstacles();
-
-  /// \brief Helper function to detect the nearby pedestrians (other actors).
-private:
-  void HandlePedestrians();
+    /// \brief Function that is called every update cycle.
+    /// \param[in] _info Timing information
+  private:
+    void OnUpdate(const common::UpdateInfo &_info);
 
 
- //-------------------------------------------------
+    // private: void InitializePedestrians();
 
-   /// \brief this actor as a SFM agent
-private:
-  sfm::Agent sfmActor;
+    /// \brief Helper function to detect the closest obstacles.
+  private:
+    void HandleObstacles();
 
-  /// \brief names of the other models in my walking group.
-private:
-  std::vector<std::string> groupNames;
+    /// \brief Helper function to detect the nearby pedestrians (other actors).
+  private:
+    void HandlePedestrians();
 
-  /// \brief vector of pedestrians detected.
-private:
-  std::vector<sfm::Agent> otherActors;
 
-  /// \brief Maximum distance to detect nearby pedestrians.
-private:
-  double peopleDistance;
+  //-------------------------------------------------
 
-  /// \brief Pointer to the parent actor.
-private:
-  physics::ActorPtr actor;
+    /// \brief this actor as a SFM agent
+  private:
+    sfm::Agent sfmActor;
 
-  /// \brief Pointer to the world, for convenience.
-private:
-  physics::WorldPtr world;
+    /// \brief names of the other models in my walking group.
+  private:
+    std::vector<std::string> groupNames;
 
-  /// \brief Pointer to the sdf element.
-private:
-  sdf::ElementPtr sdf;
+    /// \brief vector of pedestrians detected.
+  private:
+    std::vector<sfm::Agent> otherActors;
 
-  /// \brief Velocity of the actor
-private:
-  ignition::math::Vector3d velocity;
+    /// \brief Maximum distance to detect nearby pedestrians.
+  private:
+    double peopleDistance;
 
-  /// \brief List of connections
-private:
-  std::vector<event::ConnectionPtr> connections;
+    /// \brief Pointer to the parent actor.
+  private:
+    physics::ActorPtr actor;
 
-  /// \brief Time scaling factor. Used to coordinate translational motion
-  /// with the actor's walking animation.
-private:
-  double animationFactor = 1.0;
+    /// \brief Pointer to the world, for convenience.
+  private:
+    physics::WorldPtr world;
 
-  /// \brief Time of the last update.
-private:
-  common::Time lastUpdate;
+    /// \brief Pointer to the sdf element.
+  private:
+    sdf::ElementPtr sdf;
 
-  /// \brief List of models to ignore. Used for vector field
-private:
-  std::vector<std::string> ignoreModels;
+    /// \brief Velocity of the actor
+  private:
+    ignition::math::Vector3d velocity;
 
-  /// \brief Custom trajectory info.
-private:
-  physics::TrajectoryInfoPtr trajectoryInfo;
-};
+    /// \brief List of connections
+  private:
+    std::vector<event::ConnectionPtr> connections;
+
+    /// \brief Time scaling factor. Used to coordinate translational motion
+    /// with the actor's walking animation.
+  private:
+    double animationFactor = 1.0;
+
+    /// \brief Time of the last update.
+  private:
+    common::Time lastUpdate;
+
+    /// \brief List of models to ignore. Used for vector field
+  private:
+    std::vector<std::string> ignoreModels;
+
+    /// \brief Custom trajectory info.
+  private:
+    physics::TrajectoryInfoPtr trajectoryInfo;
+  };
 }
 #endif

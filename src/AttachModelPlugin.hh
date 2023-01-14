@@ -36,21 +36,23 @@ namespace servicesim
   ///   <light>         SDF element. More than one <model> can be attached.
   ///     <pose>        Offset pose of the model in the link frame.
   ///     <model_name>  Name of the other model in the world.
-  class AttachModelPlugin : public gazebo::ModelPlugin
+  class AttachModelPlugin: public gazebo::ModelPlugin
   {
     /// \brief Constructor
-    public: AttachModelPlugin();
+    public:
+      AttachModelPlugin();
 
     // Documentation inherited
-    public: virtual void Load(gazebo::physics::ModelPtr _model,
-        sdf::ElementPtr _sdf);
+    public:
+      virtual void Load(gazebo::physics::ModelPtr _model,
+      sdf::ElementPtr _sdf);
 
     /// \brief Main loop to update the pose of lights
-    private: void OnUpdate();
+    private:
+      void OnUpdate();
 
     /// \brief Pointer to private data
     private: std::unique_ptr<AttachModelPluginPrivate> dataPtr;
   };
 }
 #endif
-

@@ -32,17 +32,21 @@ namespace servicesim
   class AttachModelPluginPrivate
   {
     /// \brief Event connections
-    public: std::vector<gazebo::event::ConnectionPtr> connections;
+    public: 
+      std::vector<gazebo::event::ConnectionPtr> connections;
 
     /// \brief Pointer to this model
-    public: gazebo::physics::ModelPtr model;
+    public: 
+      gazebo::physics::ModelPtr model;
 
     /// \brief Pointer to the world
-    public: gazebo::physics::WorldPtr world;
+    public: 
+      gazebo::physics::WorldPtr world;
 
     /// \brief List of link and model pointers and the model pose offset
-    public: std::map<gazebo::physics::LinkPtr,
-        std::map<gazebo::physics::ModelPtr, ignition::math::Pose3d>> linkModels;
+    public: 
+      std::map<gazebo::physics::LinkPtr,
+      std::map<gazebo::physics::ModelPtr, ignition::math::Pose3d>> linkModels;
   };
 }
 
@@ -51,7 +55,7 @@ GZ_REGISTER_MODEL_PLUGIN(servicesim::AttachModelPlugin)
 
 /////////////////////////////////////////////////
 AttachModelPlugin::AttachModelPlugin()
-    : dataPtr(new AttachModelPluginPrivate)
+  : dataPtr(new AttachModelPluginPrivate)
 {
 }
 
@@ -61,45 +65,34 @@ void AttachModelPlugin::Load(gazebo::physics::ModelPtr _model, sdf::ElementPtr _
   this->dataPtr->model = _model;
   this->dataPtr->world = _model->GetWorld();
 
-  if (!_sdf->HasElement("link"))
-  {
+  if (!_sdf->HasElement("link")) {
     gzerr << "No <link> sdf elements found." << std::endl;
     return;
   }
 
   // load links
   sdf::ElementPtr linkElem = _sdf->GetElement("link");
-  while (linkElem)
-  {
+  while (linkElem) {
     std::string linkName;
-    if (linkElem->HasElement("link_name"))
-    {
+    if (linkElem->HasElement("link_name")) {
       linkName = linkElem->Get<std::string>("link_name");
 
       auto link = this->dataPtr->model->GetLink(linkName);
-      if (!link)
-      {
+      if (!link) {
         gzerr << "Link: '" << linkName << "' not found." << std::endl;
-      }
-      else
-      {
+      } else {
         // load models
-        if (linkElem->HasElement("model"))
-        {
+        if (linkElem->HasElement("model")) {
           sdf::ElementPtr modelElem = linkElem->GetElement("model");
-          while (modelElem)
-          {
+          while (modelElem) {
             auto modelName = modelElem->Get<std::string>("model_name");
             auto model = this->dataPtr->world->ModelByName(modelName);
 
             // TODO: what if model hasn't been loaded yet
-            if (!model)
-            {
+            if (!model) {
               gzerr << "Model: '" << modelName << "' not found, make sure it is loaded before '"
                     << _model->GetName() << "'." << std::endl;
-            }
-            else
-            {
+            } else {
               // pose is optional
               ignition::math::Pose3d pose;
               if (modelElem->HasElement("pose"))
@@ -128,12 +121,10 @@ void AttachModelPlugin::Load(gazebo::physics::ModelPtr _model, sdf::ElementPtr _
 void AttachModelPlugin::OnUpdate()
 {
   // update model pose based on link pose
-  for (auto &it : this->dataPtr->linkModels)
-  {
+  for (auto &it : this->dataPtr->linkModels) {
     auto link = it.first;
     auto &models = it.second;
-    for (auto &modelIt : models)
-    {
+    for (auto &modelIt : models) {
       auto model = modelIt.first;
       auto pose = modelIt.second;
       model->SetWorldPose(pose + link->WorldPose());

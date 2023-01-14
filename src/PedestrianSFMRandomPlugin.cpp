@@ -37,7 +37,8 @@ GZ_REGISTER_MODEL_PLUGIN(PedestrianSFMRandomPlugin)
 PedestrianSFMRandomPlugin::PedestrianSFMRandomPlugin() {}
 
 /////////////////////////////////////////////////
-void PedestrianSFMRandomPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
+void PedestrianSFMRandomPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
+{
   this->sdf = _sdf;
   this->actor = boost::dynamic_pointer_cast<physics::Actor>(_model);
   this->world = this->actor->GetWorld();
@@ -65,45 +66,54 @@ void PedestrianSFMRandomPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _
   this->sfmActor.angularVelocity = angvel.Z(); // Length()
 
   // Read in the maximum velocity of the pedestrian
-  if (_sdf->HasElement("velocity"))
+  if (_sdf->HasElement("velocity")) {
     this->sfmActor.desiredVelocity = _sdf->Get<double>("velocity");
-  else
+  } else {
     this->sfmActor.desiredVelocity = 0.8;
+  }
 
   // Read in the target weight
-  if (_sdf->HasElement("goal_weight"))
+  if (_sdf->HasElement("goal_weight")) {
     this->sfmActor.params.forceFactorDesired = _sdf->Get<double>("goal_weight");
+  }
   // Read in the obstacle weight
-  if (_sdf->HasElement("obstacle_weight"))
+  if (_sdf->HasElement("obstacle_weight")) {
     this->sfmActor.params.forceFactorObstacle =
         _sdf->Get<double>("obstacle_weight");
+  }
   // Read in the social weight
-  if (_sdf->HasElement("social_weight"))
+  if (_sdf->HasElement("social_weight")) {
     this->sfmActor.params.forceFactorSocial =
         _sdf->Get<double>("social_weight");
+  }
   // Read in the group gaze weight
-  if (_sdf->HasElement("group_gaze_weight"))
+  if (_sdf->HasElement("group_gaze_weight")) {
     this->sfmActor.params.forceFactorGroupGaze =
         _sdf->Get<double>("group_gaze_weight");
+  }
   // Read in the group coherence weight
-  if (_sdf->HasElement("group_coh_weight"))
+  if (_sdf->HasElement("group_coh_weight")) {
     this->sfmActor.params.forceFactorGroupCoherence =
         _sdf->Get<double>("group_coh_weight");
+  }
   // Read in the group repulsion weight
-  if (_sdf->HasElement("group_rep_weight"))
+  if (_sdf->HasElement("group_rep_weight")) {
     this->sfmActor.params.forceFactorGroupRepulsion =
         _sdf->Get<double>("group_rep_weight");
+  }
 
   // Read in the animation factor (applied in the OnUpdate function).
-  if (_sdf->HasElement("animation_factor"))
+  if (_sdf->HasElement("animation_factor")) {
     this->animationFactor = _sdf->Get<double>("animation_factor");
-  else
+  } else {
     this->animationFactor = 4.5;
+  }
 
-  if (_sdf->HasElement("people_distance"))
+  if (_sdf->HasElement("people_distance")) {
     this->peopleDistance = _sdf->Get<double>("people_distance");
-  else
+  } else {
     this->peopleDistance = 5.0;
+  }
 
   // Read in the pedestrians in your walking group
   if (_sdf->HasElement("group")) {
@@ -114,8 +124,9 @@ void PedestrianSFMRandomPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _
       modelElem = modelElem->GetNextElement("model");
     }
     this->sfmActor.groupId = this->sfmActor.id;
-  } else
+  } else {
     this->sfmActor.groupId = -1;
+  }
 
   // Read in the other obstacles to ignore
   if (_sdf->HasElement("ignore_obstacles")) {
@@ -149,8 +160,9 @@ void PedestrianSFMRandomPlugin::Reset() {
     sdf::ElementPtr modelElemCyclic =
         this->sdf->GetElement("trajectory")->GetElement("cyclic");
 
-    if (modelElemCyclic)
+    if (modelElemCyclic) {
       this->sfmActor.cyclicGoals = modelElemCyclic->Get<bool>();
+    }
 
     sdf::ElementPtr modelElem =
         this->sdf->GetElement("trajectory")->GetElement("waypoint");
@@ -162,31 +174,32 @@ void PedestrianSFMRandomPlugin::Reset() {
       this->sfmActor.goals.push_back(goal);
       modelElem = modelElem->GetNextElement("waypoint");
     }
-  } else if (this->sdf->HasElement("random_trajectory")){
-    
+  } else if (this->sdf->HasElement("random_trajectory")) {
+
     int seed;
     sdf::ElementPtr modelElemSeed =
         this->sdf->GetElement("random_trajectory")->GetElement("seed");
 
     std::random_device rnd;
-    if (modelElemSeed)
+    if (modelElemSeed) {
       seed = modelElemSeed->Get<int>() * (this->actor->GetId());
-    else
+    } else {
       seed = rnd();
-    
+    }
     std::mt19937 mt(seed);
-    std::uniform_int_distribution<> rand100(0,99);
+    std::uniform_int_distribution < > rand100(0, 99);
 
-    ignition::math::Vector3d origin = this->sdf->GetElement("random_trajectory")->Get<ignition::math::Vector3d>("origin");
+    ignition::math::Vector3d origin =
+      this->sdf->GetElement("random_trajectory")->Get<ignition::math::Vector3d>("origin");
     double rx_max = this->sdf->GetElement("random_trajectory")->Get<double>("rx");
     double ry_max = this->sdf->GetElement("random_trajectory")->Get<double>("ry");
-    
+
     this->sfmActor.cyclicGoals = true;
     int steps = this->sdf->GetElement("random_trajectory")->Get<int>("steps");
     for (int i = 0; i <= steps; i++) {
-      double rx = rand100(mt)/100.0 * rx_max;
-      double ry = rand100(mt)/100.0 * ry_max;
-      double t = rand100(mt)/100.0 * 2.0 * M_PI;
+      double rx = rand100(mt) / 100.0 * rx_max;
+      double ry = rand100(mt) / 100.0 * ry_max;
+      double t = rand100(mt) / 100.0 * 2.0 * M_PI;
       double x = origin.X() + rx * cos(t);
       double y = origin.Y() + ry * sin(t);
 
@@ -218,7 +231,8 @@ void PedestrianSFMRandomPlugin::Reset() {
 }
 
 /////////////////////////////////////////////////
-void PedestrianSFMRandomPlugin::HandleObstacles() {
+void PedestrianSFMRandomPlugin::HandleObstacles()
+{
   double minDist = 10000.0;
   ignition::math::Vector3d closest_obs;
   ignition::math::Vector3d closest_obs2;
@@ -271,14 +285,14 @@ void PedestrianSFMRandomPlugin::HandlePedestrians() {
 
   for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
     physics::ModelPtr model = this->world->ModelByIndex(i); // GetModel(i);
-
     if (model->GetId() != this->actor->GetId() &&
-        ((int)model->GetType() == (int)this->actor->GetType())) {
+      ((int)model->GetType() == (int)this->actor->GetType()))
+    {
       // printf("Actor %i has detected actor %i!\n", this->actor->GetId(),
       // model->GetId());
       ignition::math::Pose3d modelPose = model->WorldPose();
       ignition::math::Vector3d pos =
-          modelPose.Pos() - this->actor->WorldPose().Pos();
+      modelPose.Pos() - this->actor->WorldPose().Pos();
       if (pos.Length() < this->peopleDistance) {
         sfm::Agent ped;
         ped.id = model->GetId();
@@ -297,10 +311,11 @@ void PedestrianSFMRandomPlugin::HandlePedestrians() {
         if (this->sfmActor.groupId != -1) {
           std::vector<std::string>::iterator it;
           it = find(groupNames.begin(), groupNames.end(), model->GetName());
-          if (it != groupNames.end())
+          if (it != groupNames.end()) {
             ped.groupId = this->sfmActor.groupId;
-          else
+          } else {
             ped.groupId = -1;
+          }
         }
         this->otherActors.push_back(ped);
       }
@@ -311,7 +326,8 @@ void PedestrianSFMRandomPlugin::HandlePedestrians() {
 }
 
 /////////////////////////////////////////////////
-void PedestrianSFMRandomPlugin::OnUpdate(const common::UpdateInfo &_info) {
+void PedestrianSFMRandomPlugin::OnUpdate(const common::UpdateInfo &_info)
+{
   // Time delta
   double dt = (_info.simTime - this->lastUpdate).Double();
 
@@ -351,7 +367,7 @@ void PedestrianSFMRandomPlugin::OnUpdate(const common::UpdateInfo &_info) {
   actorPose.Pos().X(this->sfmActor.position.getX());
   actorPose.Pos().Y(this->sfmActor.position.getY());
   actorPose.Rot() =
-      ignition::math::Quaterniond(1.5707, 0, yaw); // rpy.Z()+yaw.Radian());
+  ignition::math::Quaterniond(1.5707, 0, yaw); // rpy.Z()+yaw.Radian());
   //}
 
   // Make sure the actor stays within bounds
@@ -362,10 +378,11 @@ void PedestrianSFMRandomPlugin::OnUpdate(const common::UpdateInfo &_info) {
   // Distance traveled is used to coordinate motion with the walking
   // animation
   double distanceTraveled =
-      (actorPose.Pos() - this->actor->WorldPose().Pos()).Length();
+    (actorPose.Pos() - this->actor->WorldPose().Pos()).Length();
 
   this->actor->SetWorldPose(actorPose, false, false);
-  this->actor->SetScriptTime(this->actor->ScriptTime() +
-                             (distanceTraveled * this->animationFactor));
+  this->actor->SetScriptTime(
+    this->actor->ScriptTime() +
+     (distanceTraveled * this->animationFactor));
   this->lastUpdate = _info.simTime;
 }
