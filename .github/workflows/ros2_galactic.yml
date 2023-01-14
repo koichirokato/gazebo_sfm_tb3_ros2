@@ -1,0 +1,14 @@
+name: ros2_galactic
+on: [push]
+jobs:
+  workflows-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out
+        uses: actions/checkout@v2.3.4
+      - name: Testing with including external repositories
+        uses: OUXT-Polaris/ros2-ci@master
+        with:
+          apt-packages: ros-galactic-gazebo-ros
+          pre-build: git clone https://github.com/robotics-upo/lightsfm.git && cd lightsfm &&  make && sudo make install
+          ros2-distro: galactic
